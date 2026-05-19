@@ -8,6 +8,8 @@ Built with Next.js 14, TypeScript, and Anthropic Claude (Sonnet 4.6 for vision-h
 
 This is a portfolio-grade demonstration. Hardened against a curated set of adversarial scenarios (prompt injection, social engineering, malformed inputs, ambiguous requests, conflicting attachments) — see the **Defensive design** section below.
 
+![PartFlow processing a multi-intent B2B parts order](docs/screenshots/multi_intent.png)
+
 ---
 
 ## What it does
@@ -89,6 +91,8 @@ Seven agents wired together by an orchestrator that yields typed `PipelineEvent`
 ## Defensive design
 
 A separate module (`lib/red-flags.ts`) scans incoming material against eleven categories of suspicious patterns. The scan runs on **combined text** — sender name + subject + body + any OCR extracted from attachments — not just the body, because attackers will hide instructions wherever the system looks.
+
+![Prompt injection detected — 5 critical patterns flagged, original pricing preserved](docs/screenshots/prompt_injection_example.png)
 
 | Category | What it catches | Examples |
 |---|---|---|
@@ -233,6 +237,8 @@ The Examples panel in the UI loads any of these one-click for a fast tour:
 4. **German B2B fleet** — German transport company asking for brake parts for its Mercedes fleet (Klaus Müller, Spedition Müller GmbH, Mercedes C 220 d 2019). Detects language, applies business + volume discount, replies in German. Use the operator view toggle to see the English translation.
 5. **Prompt injection** — malicious email attempting to override prices with embedded instructions. The injection is detected and flagged in the UI; the pipeline processes the legitimate part of the request normally with original pricing intact.
 6. **Out-of-office** — auto-responder. Detected before the pipeline replies. Skipped cleanly with a flag in the UI.
+
+![Human review escalation — Audi A4 is outside the catalog, so the ticket is flagged for an operator instead of being mis-quoted](docs/screenshots/human_review_case.png)
 
 ---
 
