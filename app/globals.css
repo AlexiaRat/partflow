@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background: #0E1620;
+  color: #E8EEF5;
+  font-feature-settings: "cv11", "ss01", "ss03";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Subtle scrollbars matching the dashboard theme */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0E1620; }
+::-webkit-scrollbar-thumb {
+  background: #212E40;
+  border-radius: 4px;
+  border: 2px solid #0E1620;
+}
+::-webkit-scrollbar-thumb:hover { background: #2C3B52; }
+
+/* Status pulse for an agent that is actively running */
+.status-running::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5EEAD4;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: pulse-mint 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-mint {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(94, 234, 212, 0.5); }
+  50% { opacity: 0.6; box-shadow: 0 0 0 6px rgba(94, 234, 212, 0); }
+}
+
+.status-done::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5EEAD4;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.status-error::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FB7185;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.status-pending::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6B7889;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.status-attention::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #FBBF24;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: pulse-amber 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse-amber {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(251, 191, 36, 0); }
+}
+
+/* Grid texture for the background to add depth */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
