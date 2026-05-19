@@ -174,37 +174,37 @@ Delivery is 2 business days for the in-stock portion, 14 business days for backo
 
 ### Implemented
 
-- ✅ Conversation state with `thread_id` (in-memory store, LRU eviction). Prior thread context is fed back into the classifier on follow-up replies, so a customer saying "yes, 2018, 1.5 dCi" to a clarification gets attached to the right open ticket instead of being re-classified from scratch.
-- ✅ Intent gate: emails classified as complaint, order_confirmation, or other are routed to a human operator queue rather than being priced as quote requests.
-- ✅ No-tickets gate: emails that yield zero extracted tickets (sales pitches, off-topic) hit `intent_blocked` and route to the operator queue without triggering nonsense clarifications.
-- ✅ VIN extraction from text and OCR of registration documents
-- ✅ VIN sanity check (17 chars, valid alphabet excluding I/O/Q, no all-zero values)
-- ✅ Year sanity check (`1990 ≤ year ≤ currentYear + 1`)
-- ✅ Multi-intent split (one email → many tickets, each routed independently)
-- ✅ Attachment-priority extraction: when a registration document is attached, its brand/model/year/engine override any conflicting values in the email body
-- ✅ Human-in-the-loop escalation with reasons surfaced in the UI
-- ✅ Confidence scores per decision (classifier, router, catalog, completeness)
-- ✅ Language auto-detect (ro / en / hu / de) with reply in matching language
-- ✅ Unsupported-language detection (Italian, French, Spanish, Cyrillic-script) emits a red flag for operator review
-- ✅ Operator view: on-demand translation of the customer email and the agents' draft reply into the operator's preferred language (English by default), via a Haiku-backed `/api/translate` endpoint. Request abort on rapid changes prevents stale translations leaking through. Original text is preserved at all times.
-- ✅ Tone normalization (warm-professional regardless of customer tone)
-- ✅ Defensive scanning across sender name + subject + body + OCR text (eight pattern categories in `lib/red-flags.ts`)
-- ✅ Two-layer prompt injection defense (regex + hardcoded system preamble). Patterns in EN/RO/DE/HU.
-- ✅ Auto-reply detection (multilingual subject/body patterns including German OOO with date ranges)
-- ✅ Auto-reply with embedded request: when an OOO message also contains a real request, the pipeline processes the request and attaches an advisory `auto_reply_with_content` flag instead of skipping
-- ✅ Quote validity dates (7 days, surfaced in reply)
-- ✅ Stock-aware pricing: requests exceeding stock split into `in_stock_qty` / `backorder_qty` with disclosed split delivery times
-- ✅ Quantity disambiguation: when the customer doesn't specify quantity (or uses vague terms like "câteva" / "a few" / "einige"), `quantity_assumed: true` is flagged and the reply explicitly invites confirmation
-- ✅ PDF attachment support (Claude's native document blocks)
-- ✅ Vision attachment classification (PART_LABEL / VIN_DOCUMENT / DAMAGED_PART / COMPANY_LOGO / SIGNATURE / OTHER)
-- ✅ Agent Trace: every agent emits structured reasoning (inputs summary, ordered decision steps, optional per-decision data payload, outputs summary, duration). The UI renders this in a collapsible panel with per-ticket filter chips so you can see exactly which rule fired, which catalog candidates scored where, and how the pricing math was built.
-- ✅ Catalog scoring with multilingual term translation, diacritic stripping, stemming, position keywords (front/rear/left/right), negation handling (fără / ohne / without / nem), specific-component disambiguation (pad ≠ disc), brand fuzzy matching (Mercedes/Mercedes-Benz, VW/Volkswagen), model rules (BMW 320d → Seria 3)
-- ✅ Bilingual reply rendering: when the customer language differs from operator language, the Reply tab shows the English version (mint panel, primary) with the original in the customer's language below (collapsible)
-- ✅ Security Notice Banner in the Reply tab when red flags fire (severity + matched patterns)
-- ✅ Skipped Pipeline Notice for auto-reply and intent_blocked outcomes — no more "Reply will appear..." spinner when the pipeline correctly chose not to reply
-- ✅ Friendly, classified error UI (auth, rate-limit, quota, model-not-found, max-tokens truncation, Zod validation failure, timeout, network). Each error class shows a specific tip; raw error excerpt is available behind a toggle for operator debugging.
-- ✅ Streaming pipeline (SSE)
-- ✅ Conversation inspection API: `GET /api/conversations` lists threads, `GET /api/conversations/[id]` returns the full thread record
+-  Conversation state with `thread_id` (in-memory store, LRU eviction). Prior thread context is fed back into the classifier on follow-up replies, so a customer saying "yes, 2018, 1.5 dCi" to a clarification gets attached to the right open ticket instead of being re-classified from scratch.
+-  Intent gate: emails classified as complaint, order_confirmation, or other are routed to a human operator queue rather than being priced as quote requests.
+-  No-tickets gate: emails that yield zero extracted tickets (sales pitches, off-topic) hit `intent_blocked` and route to the operator queue without triggering nonsense clarifications.
+-  VIN extraction from text and OCR of registration documents
+-  VIN sanity check (17 chars, valid alphabet excluding I/O/Q, no all-zero values)
+-  Year sanity check (`1990 ≤ year ≤ currentYear + 1`)
+-  Multi-intent split (one email → many tickets, each routed independently)
+-  Attachment-priority extraction: when a registration document is attached, its brand/model/year/engine override any conflicting values in the email body
+-  Human-in-the-loop escalation with reasons surfaced in the UI
+-  Confidence scores per decision (classifier, router, catalog, completeness)
+-  Language auto-detect (ro / en / hu / de) with reply in matching language
+-  Unsupported-language detection (Italian, French, Spanish, Cyrillic-script) emits a red flag for operator review
+-  Operator view: on-demand translation of the customer email and the agents' draft reply into the operator's preferred language (English by default), via a Haiku-backed `/api/translate` endpoint. Request abort on rapid changes prevents stale translations leaking through. Original text is preserved at all times.
+-  Tone normalization (warm-professional regardless of customer tone)
+-  Defensive scanning across sender name + subject + body + OCR text (eight pattern categories in `lib/red-flags.ts`)
+-  Two-layer prompt injection defense (regex + hardcoded system preamble). Patterns in EN/RO/DE/HU.
+-  Auto-reply detection (multilingual subject/body patterns including German OOO with date ranges)
+-  Auto-reply with embedded request: when an OOO message also contains a real request, the pipeline processes the request and attaches an advisory `auto_reply_with_content` flag instead of skipping
+-  Quote validity dates (7 days, surfaced in reply)
+-  Stock-aware pricing: requests exceeding stock split into `in_stock_qty` / `backorder_qty` with disclosed split delivery times
+-  Quantity disambiguation: when the customer doesn't specify quantity (or uses vague terms like "câteva" / "a few" / "einige"), `quantity_assumed: true` is flagged and the reply explicitly invites confirmation
+-  PDF attachment support (Claude's native document blocks)
+-  Vision attachment classification (PART_LABEL / VIN_DOCUMENT / DAMAGED_PART / COMPANY_LOGO / SIGNATURE / OTHER)
+-  Agent Trace: every agent emits structured reasoning (inputs summary, ordered decision steps, optional per-decision data payload, outputs summary, duration). The UI renders this in a collapsible panel with per-ticket filter chips so you can see exactly which rule fired, which catalog candidates scored where, and how the pricing math was built.
+-  Catalog scoring with multilingual term translation, diacritic stripping, stemming, position keywords (front/rear/left/right), negation handling (fără / ohne / without / nem), specific-component disambiguation (pad ≠ disc), brand fuzzy matching (Mercedes/Mercedes-Benz, VW/Volkswagen), model rules (BMW 320d → Seria 3)
+-  Bilingual reply rendering: when the customer language differs from operator language, the Reply tab shows the English version (mint panel, primary) with the original in the customer's language below (collapsible)
+-  Security Notice Banner in the Reply tab when red flags fire (severity + matched patterns)
+-  Skipped Pipeline Notice for auto-reply and intent_blocked outcomes — no more "Reply will appear..." spinner when the pipeline correctly chose not to reply
+-  Friendly, classified error UI (auth, rate-limit, quota, model-not-found, max-tokens truncation, Zod validation failure, timeout, network). Each error class shows a specific tip; raw error excerpt is available behind a toggle for operator debugging.
+-  Streaming pipeline (SSE)
+-  Conversation inspection API: `GET /api/conversations` lists threads, `GET /api/conversations/[id]` returns the full thread record
 
 ### Production Roadmap
 
